@@ -1,0 +1,19 @@
+{
+    "name": "adjaya/fast-router",
+    "description": "Fast Router",
+    "license": "MIT",
+    "authors": [
+        {
+          "name": "Adjaya"
+        }
+      ],
+    "autoload": {
+        "psr-4": {
+            "Adjaya\\Router\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "php": "7.2.*"
+    }
+}
