@@ -32,6 +32,12 @@ class Collector implements CollectorInterface
         return $this->routeCollector->getCurrentHandlingGroup();
     }
 
+    public function collection(callable $callback): HandlingGroup
+    {
+        return $this->routeCollector->addCollection($callback, $this);
+    }
+
+
     public function group($prefix, callable $callback): HandlingGroup
     {
         return $this->routeCollector->addGroup($prefix, $callback, $this);

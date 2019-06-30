@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Adjaya\Router;
 
-class RouteCollectorDecoratorBase implements RouteCollectorDecoratorInterface
+class RouteCollectorDecoratorBase implements RouteCollectorInterface, RouteCollectorDecoratorInterface
 {
     /**
      * @var RouteCollector
@@ -43,11 +43,13 @@ class RouteCollectorDecoratorBase implements RouteCollectorDecoratorInterface
      *
      * @param callable $callback
      */
-    public function groupAddons(
+    public function addCollection (
         callable $callback, CollectorInterface $collector
     ): HandlingGroupInterface {
         return $this->addGroup('', $callback, $collector);
     }
+
+
 
     public function addGroup(
         $prefix, callable $callback, CollectorInterface $collector

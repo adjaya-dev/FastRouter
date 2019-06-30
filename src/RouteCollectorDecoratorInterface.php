@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Adjaya\Router;
 
-interface RouteCollectorDecoratorInterface extends RouteCollectorInterface
+interface RouteCollectorDecoratorInterface
 {
-    public function groupAddons(
-        callable $callback, CollectorInterface $collector
-    ): HandlingGroupInterface;
 }

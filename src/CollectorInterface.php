@@ -10,6 +10,12 @@ interface CollectorInterface
 
     public function handle(): HandlingGroup;
 
+    public function collection(callable $callback): HandlingGroup;
+
+    public function group($prefix, callable $callback): HandlingGroup;
+
+    public function route($httpMethods, $path, $handler): HandlingRoute;
+
     public function get($path, $handler): HandlingRoute;
 
     public function post($path, $handler): HandlingRoute;

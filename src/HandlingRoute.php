@@ -36,7 +36,7 @@ class HandlingRoute implements HandlingRouteInterface
 
     public function controller($controller): HandlingRouteInterface
     {
-        $this->route->setHandler($controler);
+        $this->route->setHandler($controller);
 
         return $this;
     }

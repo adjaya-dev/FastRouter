@@ -225,6 +225,13 @@ class RouteCollector implements RouteCollectorInterface
         }        
     }
 
+    public function addCollection(
+        callable $callback, CollectorInterface $collector
+    ): HandlingGroupInterface
+    {
+        $this->addGroup('', $callback, $collector);
+    }
+
     /**
      * {@inheritdoc}
      *

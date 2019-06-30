@@ -11,4 +11,6 @@ interface RouteCollectorInterface
     public function addGroup($prefix, callable $callback, CollectorInterface $collector): HandlingGroupInterface;
 
     public function addRoute($httpMethod, $route, $handler): HandlingRouteInterface;
+
+    public function addCollection(callable $callback, CollectorInterface $collector): HandlingGroupInterface;
 }
