@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Adjaya\Router;
 
-class Route extends DataMapper
+class Route extends DataMapper implements RouteInterface
 {
     protected static $idCount = 0;
     protected $id;
@@ -13,8 +13,10 @@ class Route extends DataMapper
     protected $handler;
     protected $name;
 
-    public function __construct($httpMethods = [], $path = '/', $handler = [], $name = '')
+    public function __construct($httpMethods = '*', $path = '/', $handler = null, $name = '')
     {
+        var_dump('***** TODO function getData a utiser dans routeCollector::ProcessCollection ****************
+        ');
         $this->id = 'route_'. self::$idCount++;
         $this->httpMethods = (array) $httpMethods;
         $this->path = (string) $path;
@@ -59,11 +61,16 @@ class Route extends DataMapper
 
     public function setHandler($handler)
     {
-        $this->Handler = $handler;
+        $this->handler = $handler;
     }
 
     public function getHandler()
     {
         return $this->handler;
+    }
+
+    public function getData(): array
+    {
+        return [$this->getList(), $this->getMaps()];
     }
 }

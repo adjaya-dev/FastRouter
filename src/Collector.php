@@ -43,7 +43,7 @@ class Collector implements CollectorInterface
         return $this->routeCollector->addGroup($prefix, $callback, $this);
     }
 
-    public function route($httpMethods, $path, $handler): HandlingRoute
+    public function route($path = '/', $handler = null, $httpMethods = '*'): HandlingRoute
     {
         return $this->routeCollector->addRoute($httpMethods, $path, $handler);
     }
@@ -56,9 +56,9 @@ class Collector implements CollectorInterface
      * @param string $path
      * @param mixed  $handler
      */
-    public function get($path, $handler): HandlingRoute
+    public function get($path = '/', $handler = null): HandlingRoute
     {
-        return $this->route('GET', $path, $handler);
+        return $this->route($path, $handler, 'GET');
     }
 
     /**
@@ -69,9 +69,9 @@ class Collector implements CollectorInterface
      * @param string $path
      * @param mixed  $handler
      */
-    public function post($path, $handler): HandlingRoute
+    public function post($path = '/', $handler = null): HandlingRoute
     {
-        return $this->route('POST', $path, $handler);
+        return $this->route($path, $handler, 'POST');
     }
 
     /**
@@ -82,9 +82,9 @@ class Collector implements CollectorInterface
      * @param string $path
      * @param mixed  $handler
      */
-    public function put($path, $handler): HandlingRoute
+    public function put($path = '/', $handler = null): HandlingRoute
     {
-        return $this->route('PUT', $path, $handler);
+        return $this->route($path, $handler, 'PUT');
     }
 
     /**
@@ -95,9 +95,9 @@ class Collector implements CollectorInterface
      * @param string $path
      * @param mixed  $handler
      */
-    public function delete($path, $handler): HandlingRoute
+    public function delete($path = '/', $handler = null): HandlingRoute
     {
-        return $this->route('DELETE', $path, $handler);
+        return $this->route($path, $handler, 'DELETE');
     }
 
     /**
@@ -108,9 +108,9 @@ class Collector implements CollectorInterface
      * @param string $path
      * @param mixed  $handler
      */
-    public function patch($path, $handler): HandlingRoute
+    public function patch($path = '/', $handler = null): HandlingRoute
     {
-        return $this->route('PATCH', $path, $handler);
+        return $this->route($path, $handler, 'PATCH');
     }
 
     /**
@@ -121,13 +121,13 @@ class Collector implements CollectorInterface
      * @param string $path
      * @param mixed  $handler
      */
-    public function head($path, $handler): HandlingRoute
+    public function head($path = '/', $handler = null): HandlingRoute
     {
-        return $this->route('HEAD', $path, $handler);
+        return $this->route($path, $handler, 'HEAD');
     }
 
-    public function any($path, $handler): HandlingRoute
+    public function any($path = '/', $handler = null): HandlingRoute
     {
-        return $this->route('*', $path, $handler);
+        return $this->route($path, $handler, '*');
     }
 }

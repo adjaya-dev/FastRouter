@@ -34,6 +34,10 @@ class RouteCollector implements RouteCollectorInterface
      */
     protected $currentGroupName = '';
 
+    protected $currentGroupDataAddons = ['lists' => [], 'maps' => []];
+
+    protected $Route = Route::class;
+    protected $Group = Group::class;
     protected $HandlingGroup = HandlingGroup::class;
     protected $HandlingRoute = HandlingRoute::class;
 
@@ -49,6 +53,14 @@ class RouteCollector implements RouteCollectorInterface
         $this->dataGenerator = $dataGenerator;
         $this->currentGroup = new Group();
         $this->currentHandlingGroup = new HandlingGroup($this->currentGroup);
+
+        if (isset($options['route'])) {
+            $this->setRoute($options['route']);
+        }
+
+        if (isset($options['group'])) {
+            $this->setGroup($options['group']);
+        }
 
         if (isset($options['handlingRoute'])) {
             $this->setHandlingRoute($options['handlingRoute']);
@@ -86,7 +98,7 @@ class RouteCollector implements RouteCollectorInterface
 
     public function getGroup()
     {
-        return $this->group;
+        return $this->Group;
     }
 
     public function setHandlingRoute(string $handlingRouteClass)
@@ -104,23 +116,11 @@ class RouteCollector implements RouteCollectorInterface
 
     public function setHandlingGroup(string $handlingGroupClass)
     {
-        if (is_a($handlingGroupClass, HandlingRouteInterface::class, true))
+        if (is_a($handlingGroupClass, HandlingGroupInterface::class, true))
         {
             $this->HandlingGroup = $handlingGroupClass;
         }
     }
-
-    /*public function __call(string $method, array $params): HandlingGroup
-    {
-        try {
-            return call_user_func_array(
-                [$this->currentHandlingGroup, $method], $params
-            );
-        } catch (Throwable $e) {
-            throw new Exception ($e->getMessage());
-        }
-    }
-    */
 
     public function getCurrentHandlingGroup(): HandlingGroupInterface
     {
@@ -152,7 +152,12 @@ class RouteCollector implements RouteCollectorInterface
     {
         foreach ($collection as $obj) 
         {
-            if ($obj instanceof Route) {
+            if ($obj instanceof RouteInterface) {
+
+                $routeDataAddons = ['lists' => $obj->getLists(), 'maps' => $obj->getMaps()];
+                $routeDataAddons = array_merge_recursive($this->currentGroupDataAddons, $routeDataAddons);
+                var_dump($routeDataAddons);
+                $this->routesData['info'][$obj->getId()]['addons'] = $routeDataAddons;
 
                 $currentRoute = $this->currentGroupPrefix . $obj->getPath();
                 $route_data = $this->routeParser->parse($currentRoute);
@@ -165,7 +170,14 @@ class RouteCollector implements RouteCollectorInterface
 
                 $this->routesData['info'][$obj->getId()]['handler'] = $obj->getHandler();
 
-            } elseif($obj instanceof Group) {
+            } elseif($obj instanceof GroupInterface) {
+
+                $previousGroupDataAddons = $this->currentGroupDataAddons;
+                
+                $groupDataAddons = ['lists' => $obj->getLists(), 'maps' => $obj->getMaps()];
+                $this->currentGroupDataAddons = array_merge_Recursive($previousGroupDataAddons, $groupDataAddons );
+
+                //var_dump($this->currentGroupDataAddons);
 
                 $previousGroupName = $this->currentGroupName;
                 if ($name = $obj->getName()) {
@@ -192,6 +204,8 @@ class RouteCollector implements RouteCollectorInterface
 
                 $this->currentGroupPrefix = $previousGroupPrefix;
                 $this->currentGroupName = $previousGroupName;
+
+                $this->currentGroupDataAddons = $previousGroupDataAddons;
 
             } else {
                 throw new Exception("Error Processing Request", 7);
@@ -248,7 +262,8 @@ class RouteCollector implements RouteCollectorInterface
         }
 
         $previousGroup = $this->currentGroup;
-        $group = $this->currentGroup = new Group($prefix, $group_name);
+        $group = $this->getGroup();
+        $group = $this->currentGroup = new $group($prefix, $group_name);
 
         $previousHandlingGroup = $this->currentHandlingGroup;
 
@@ -271,15 +286,15 @@ class RouteCollector implements RouteCollectorInterface
      *
      * @return string $route_id
      */
-    public function addRoute($httpMethods, $path, $handler): HandlingRouteInterface
+    public function addRoute($httpMethods, $path , $handler): HandlingRouteInterface
     {
         $name = '';
         if (\is_array($path)) {
             $name = key($path);
             $path = $path[key($path)];
         }
-
-        $route = new Route(
+        $route = $this->getRoute();
+        $route = new $route(
                     $httpMethods,
                     $path,
                     $handler,

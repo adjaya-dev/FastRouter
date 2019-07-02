@@ -6,37 +6,37 @@ namespace Adjaya\Router;
 
 class HandlingRoute implements HandlingRouteInterface
 {
-    protected $route;
+    protected $dataMapper;
     
     public function __construct(Route $route)
     {
-        $this->route = $route;
+        $this->dataMapper = $route;
     }
 
     public function name(string $name): HandlingRouteInterface
     {
-        $this->route->setName($name);
+        $this->dataMapper->setName($name);
 
         return $this;
     }
 
     public function path(string $path): HandlingRouteInterface
     {
-        $this->route->setPath($path);
+        $this->dataMapper->setPath($path);
 
         return $this;
     }
 
     public function methods($httpMethods): HandlingRouteInterface
     {
-        $this->route->setHttpMethods($httpMethods);
+        $this->dataMapper->setHttpMethods($httpMethods);
 
         return $this;
     }
 
     public function controller($controller): HandlingRouteInterface
     {
-        $this->route->setHandler($controller);
+        $this->dataMapper->setHandler($controller);
 
         return $this;
     }

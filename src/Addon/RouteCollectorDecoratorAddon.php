@@ -12,6 +12,8 @@ class RouteCollectorDecoratorAddon extends RouteCollectorDecoratorBase
     protected $RouteCollector;
     
     protected $options = [
+        'route' => RouteAddon::class,
+        'group' => GroupAddon::class,
         'handlingRoute' => HandlingRouteAddon::class,
         'handlingGroup' => HandlingGroupAddon::class,
     ];
@@ -26,6 +28,8 @@ class RouteCollectorDecoratorAddon extends RouteCollectorDecoratorBase
             $this->setOptions($options);
         }
 
+        $this->RouteCollector->setRoute($this->options['route']);
+        $this->RouteCollector->setGroup($this->options['group']);
         $this->RouteCollector->setHandlingRoute($this->options['handlingRoute']);
         $this->RouteCollector->setHandlingGroup($this->options['handlingGroup']);
     }
@@ -37,6 +41,14 @@ class RouteCollectorDecoratorAddon extends RouteCollectorDecoratorBase
      */
     protected function setOptions(array $options): void
     {
+        if (isset($options['route'])) {
+            $this->options['route'] =  $options['route'];
+        }
+
+        if (isset($options['group'])) {
+            $this->options['group'] = $options['group'];
+        }
+
         if (isset($options['handlingRoute'])) {
             $this->options['handlingRoute'] =  $options['handlingRoute'];
         }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Adjaya\Router;
 
-class Group extends DataMapper
+class Group extends DataMapper implements GroupInterface
 {
     protected static $idCount = 0;
     protected $id;
@@ -57,5 +57,10 @@ class Group extends DataMapper
     public function getCollection(): array
     {
         return $this->collection;
+    }
+
+    public function getData(): array
+    {
+        return [$this->getList(), $this->getMaps()];
     }
 }

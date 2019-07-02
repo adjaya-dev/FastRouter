@@ -10,7 +10,7 @@ class DataMapper
     
     protected $maps = [];
 
-    public function setMap($adds, string $value): void
+    public function setMap($adds, $value): void
     {
         $current = &$this->maps;
 
@@ -21,7 +21,7 @@ class DataMapper
         $current = $value;
     }
 
-    public function getMap($adds): array
+    public function getMap($adds)
     {
         $current = &$this->maps;
 
@@ -29,7 +29,7 @@ class DataMapper
             if (isset($current[$add])) {
                 $current =  &$current[$add];
             } else {
-                return [];
+                return null;
                 break; 
             }
         }
@@ -63,5 +63,15 @@ class DataMapper
         }
 
         return $current;
+    }
+
+    public function getLists()
+    {
+        return $this->lists;
+    }
+
+    public function getMaps()
+    {
+        return $this->maps;
     }
 }

@@ -6,23 +6,23 @@ namespace Adjaya\Router;
 
 class HandlingGroup implements HandlingGroupInterface
 {
-    protected $group;
+    protected $dataMapper;
 
     public function __construct(Group $group)
     {
-        $this->group = $group;
+        $this->dataMapper = $group;
     }
 
     public function prefix(string $prefix): HandlingGroupInterface
     {
-        $this->group->setPrefix($prefix);
+        $this->dataMapper->setPrefix($prefix);
 
         return $this;
     }
 
     public function name(string $name): HandlingGroupInterface
     {
-        $this->group->setName($name);
+        $this->dataMapper->setName($name);
 
         return $this;
     }
