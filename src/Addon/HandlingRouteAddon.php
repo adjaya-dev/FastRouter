@@ -12,7 +12,6 @@ class HandlingRouteAddon extends HandlingRoute
 
     public function param(string $name, $value): self 
     {
-        var_dump($this->dataMapper);
         $this->dataMapper->setParam($name, $value);
         /*
         $this->dataMapper->setMap(['params', $name], $value);

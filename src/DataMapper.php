@@ -21,7 +21,7 @@ class DataMapper
         $current = $value;
     }
 
-    public function getMap($adds)
+    public function getMap($adds): array
     {
         $current = &$this->maps;
 
@@ -65,13 +65,18 @@ class DataMapper
         return $current;
     }
 
-    public function getLists()
+    public function getLists(): array
     {
         return $this->lists;
     }
 
-    public function getMaps()
+    public function getMaps(): array
     {
         return $this->maps;
+    }
+
+    public function getData(): array
+    {
+        return array_merge_recursive($this->getLists(), $this->getMaps());
     }
 }

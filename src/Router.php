@@ -155,19 +155,48 @@ class Router
 
     protected function getRouteCollector(): RouteCollectorInterface
     {
-    
         if (is_array($this->options['routeCollector'])) {
             list($routeCollector, $options) = $this->options['routeCollector'];
         } else {
             $routeCollector = $this->options['routeCollector'];
-            $options = null;
+            $options = [];
         }
 
+        if (is_a($routeCollector, ConfiguratorInterface::class, true))
+        {
+            $routeCollector = new $routeCollector($options);
+            $options = $routeCollector->getOptions();
+            $routeCollector = $routeCollector->getClass();
+        }
+
+        if (is_a($routeCollector, RouteCollectorInterface::class, true))
+        {
+            if (isset($options['routeParser'])) {
+                $this->options['routeParser'] = $options['routeParser'];
+                unset($options['routeParser']);
+            }
+            if (isset($options['dataGenerator'])) {
+                $this->options['dataGenerator'] = $options['dataGenerator'];
+                unset($options['dataGenerator']);
+            }
+            if (isset($options['allowIdenticalRegexRoutes'])) {
+                $this->options['allowIdenticalRegexRoutes'] = $options['allowIdenticalRegexRoutes'];
+                unset($options['allowIdenticalRegexRoutes']);
+            }
+
+            return $this->routeCollectorFactory($routeCollector, $options);
+        } 
+        
+        throw new Exception("Error Processing Request", 1);
+    }
+
+    protected function routeCollectorFactory($routeCollector, $options): RouteCollectorInterface
+    {
         return new $routeCollector(
-                $this->getRouteParser(),
-                $this->getDataGenerator(),
-                $options
-            );
+            $this->getRouteParser(),
+            $this->getDataGenerator(),
+            $options
+        );
     }
 
     protected function getRouteParser(): RouteParser\RouteParserInterface

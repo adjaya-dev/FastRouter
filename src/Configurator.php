@@ -6,9 +6,14 @@ namespace Adjaya\Router;
 
 class Configurator implements ConfiguratorInterface
 {
-    protected $options;
+    protected $options = [];
 
     protected $class;
+
+    public function __construct(array $options)
+    {
+        $this->options = $options + $this->options;
+    }
 
     public function getOptions(): array
     {

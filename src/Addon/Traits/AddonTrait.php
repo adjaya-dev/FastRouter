@@ -9,7 +9,6 @@ trait AddonTrait
     public function middleWare(... $middleware)
     {
         $this->dataMapper->setList(['middlewares', 'basic'], $middleware);
-        var_dump($this->dataMapper->getList('middlewares'));
 
         return $this;
     }

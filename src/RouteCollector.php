@@ -34,7 +34,8 @@ class RouteCollector implements RouteCollectorInterface
      */
     protected $currentGroupName = '';
 
-    protected $currentGroupDataAddons = ['lists' => [], 'maps' => []];
+    //protected $currentGroupDataAddons = ['lists' => [], 'maps' => []];
+    protected $currentGroupDataAddons = [];
 
     protected $Route = Route::class;
     protected $Group = Group::class;
@@ -72,7 +73,6 @@ class RouteCollector implements RouteCollectorInterface
 
         //class_alias($routeHandling, __NAMESPACE__ . '\RouteHandling');
         //class_alias($groupHandling, __NAMESPACE__ . '\GroupHandling');
-
     }
 
     public function setRoute(string $routeClass)
@@ -154,10 +154,14 @@ class RouteCollector implements RouteCollectorInterface
         {
             if ($obj instanceof RouteInterface) {
 
-                $routeDataAddons = ['lists' => $obj->getLists(), 'maps' => $obj->getMaps()];
+                $routeDataAddons = $obj->getData();
+
                 $routeDataAddons = array_merge_recursive($this->currentGroupDataAddons, $routeDataAddons);
-                var_dump($routeDataAddons);
-                $this->routesData['info'][$obj->getId()]['addons'] = $routeDataAddons;
+
+                $this->routesData['info'][$obj->getId()] = [
+                    'handler' => $obj->getHandler(),
+                    'add' => $routeDataAddons,
+                ];
 
                 $currentRoute = $this->currentGroupPrefix . $obj->getPath();
                 $route_data = $this->routeParser->parse($currentRoute);
@@ -165,19 +169,39 @@ class RouteCollector implements RouteCollectorInterface
                 $this->dataGenerator
                     ->addRoute($obj->getHttpMethods(), $route_data, $obj->getId(), $this->currentGroupId);
 
-                /* PARSE REVERSE */
-                $this->parseReverse($obj, $route_data);
+                if ($name = $obj->getName()) 
+                {
+                    $route_name = '';
+        
+                    if ($this->currentGroupName) {
+                        $route_name = $this->currentGroupName;
+                    }
 
-                $this->routesData['info'][$obj->getId()]['handler'] = $obj->getHandler();
+                    $route_name .= $route_name ? '.' . $name : $name;
+                    // Todo check if route_name is already set
+                    $this->routesData['named'][$obj->getId()] = $route_name;
 
-            } elseif($obj instanceof GroupInterface) {
+                    /* PARSE REVERSE */
+                    if (method_exists($this->routeParser, 'parseReverse')) 
+                    {
+                        if (isset($this->routesData['reverse']) &&
+                            array_key_exists($route_name, $this->routesData['reverse'])
+                        ) {
+                            throw new Exception(
+                                "The route name '$route_name' is already used and must be unique!"
+                            );
+                        }
+            
+                        $this->routesData['reverse'][$route_name] = $this->routeParser->parseReverse($route_data);
+                    }        
+                }
+            } elseif ($obj instanceof GroupInterface) {
 
                 $previousGroupDataAddons = $this->currentGroupDataAddons;
                 
-                $groupDataAddons = ['lists' => $obj->getLists(), 'maps' => $obj->getMaps()];
-                $this->currentGroupDataAddons = array_merge_Recursive($previousGroupDataAddons, $groupDataAddons );
+                $groupDataAddons = $obj->getData();
 
-                //var_dump($this->currentGroupDataAddons);
+                $this->currentGroupDataAddons = array_merge_recursive($previousGroupDataAddons, $groupDataAddons );
 
                 $previousGroupName = $this->currentGroupName;
                 if ($name = $obj->getName()) {
@@ -213,37 +237,11 @@ class RouteCollector implements RouteCollectorInterface
         }
     }
 
-    protected function parseReverse($obj, $route_data)
-    {
-        if (($name = $obj->getName()) && method_exists($this->routeParser, 'parseReverse')) 
-        {
-            $route_name = null;
-
-            if ($this->currentGroupName) {
-                $route_name = $this->currentGroupName;
-            }
-
-            $route_name .= $route_name ? '.' . $name : $name;
-
-            if (isset($this->routesData['reverse']) &&
-                array_key_exists($route_name, $this->routesData['reverse'])
-            ) {
-                throw new Exception(
-                    "The route name '$route_name' is already used and must be unique!"
-                );
-            }
-
-            $this->routesData['reverse'][$route_name] = $this->routeParser->parseReverse($route_data);
-
-            $this->routesData['named'][$obj->getId()] = $route_name;
-        }        
-    }
-
     public function addCollection(
         callable $callback, CollectorInterface $collector
     ): HandlingGroupInterface
     {
-        $this->addGroup('', $callback, $collector);
+        return $this->addGroup('', $callback, $collector);
     }
 
     /**
@@ -293,6 +291,7 @@ class RouteCollector implements RouteCollectorInterface
             $name = key($path);
             $path = $path[key($path)];
         }
+        
         $route = $this->getRoute();
         $route = new $route(
                     $httpMethods,

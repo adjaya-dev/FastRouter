@@ -49,8 +49,6 @@ class RouteCollectorDecoratorBase implements RouteCollectorInterface, RouteColle
         return $this->addGroup('', $callback, $collector);
     }
 
-
-
     public function addGroup(
         $prefix, callable $callback, CollectorInterface $collector
     ): HandlingGroupInterface 

@@ -58,9 +58,4 @@ class Group extends DataMapper implements GroupInterface
     {
         return $this->collection;
     }
-
-    public function getData(): array
-    {
-        return [$this->getList(), $this->getMaps()];
-    }
 }

@@ -8,13 +8,15 @@ interface DataMapperInterface
 {
     public function setMap($adds, $value): void;
 
-    public function getMap($adds);
+    public function getMap($adds): array;
 
     public function setList($adds, $values): void;
 
-    public function getLists();
+    public function getLists(): array;
 
-    public function getMaps();
+    public function getMaps(): array;
 
-    public function getList($adds): array;    
+    public function getList($adds): array;  
+
+    public function getData(): array;
 }

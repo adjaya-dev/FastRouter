@@ -68,9 +68,4 @@ class Route extends DataMapper implements RouteInterface
     {
         return $this->handler;
     }
-
-    public function getData(): array
-    {
-        return [$this->getList(), $this->getMaps()];
-    }
 }

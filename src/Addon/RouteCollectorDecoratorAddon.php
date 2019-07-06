@@ -7,7 +7,7 @@ namespace Adjaya\Router\Addon;
 use Adjaya\Router\RouteCollectorDecoratorBase;
 use Adjaya\Router\RouteCollectorInterface;
 
-class RouteCollectorDecoratorAddon extends RouteCollectorDecoratorBase
+class RouteCollectorDecoratorAddon extends RouteCollectorDecoratorBase implements RouteCollectorDecoratorAddonInterface
 {
     protected $RouteCollector;
     
