@@ -8,18 +8,39 @@ use Adjaya\Router\Route;
 
 class RouteAddon extends Route
 {
+    use Traits\AddonTrait {
+        Traits\AddonTrait::getData as _getData; 
+    }
+    
+    protected $params = [];
+
     public function setParam($name, $value)
     {
-        $this->setMap(['params', $name], $value);
+        //$this->setMap(['params', $name], $value);
+        $this->params[$name] = $value;
     }
 
-    public function getParam($name)
+    public function getParams($parent = null)
     {
-        return $this->getMap(['params', $name]);
+        $parent = ['autre_param' => 'test_add'];
+
+        if ($parent) {
+            return $this->params + $parent;
+        }
+
+        return $this->params;
     }
 
-    public function getParams()
+    public function getData(?array $parent = null): array
     {
-        return $this->getMap('params');
+        $data = null;
+
+        if ($parent) { $data = $parent; }
+
+        if ($params = isset($parent['params']) ? $this->getParams($parent['params']) : $this->getParams()) {
+            $data['params'] = $params;
+        }
+
+        return $this->_getData($data);
     }
 }

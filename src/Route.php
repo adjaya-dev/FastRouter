@@ -15,8 +15,6 @@ class Route extends DataMapper implements RouteInterface
 
     public function __construct($httpMethods = '*', $path = '/', $handler = null, $name = '')
     {
-        var_dump('***** TODO function getData a utiser dans routeCollector::ProcessCollection ****************
-        ');
         $this->id = 'route_'. self::$idCount++;
         $this->httpMethods = (array) $httpMethods;
         $this->path = (string) $path;
@@ -34,9 +32,13 @@ class Route extends DataMapper implements RouteInterface
         $this->name = $name;
     }
 
-    public function getName(): string
+    public function getName(string $prefixName = ''): string
     {
-        return $this->name;
+        if ($name = $this->name) {
+            $name = $prefixName ? $prefixName . '.' . $name : $name;
+        }
+        
+        return $name;
     }
 
     public function setPath(string $path)
@@ -44,9 +46,13 @@ class Route extends DataMapper implements RouteInterface
         $this->path = $path;
     }
 
-    public function getPath(): string
+    public function getPath($prefix = ''): string
     {
-        return $this->path;
+        if ($path = $this->path) {
+            $path = $prefix ? $prefix . $path : $path;
+        }
+        
+        return $path;
     }
 
     public function setHttpMethods($httpMethods)

@@ -8,4 +8,5 @@ use Adjaya\Router\Group;
 
 class GroupAddon extends Group
 {
+    use Traits\AddonTrait;
 }

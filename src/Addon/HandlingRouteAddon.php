@@ -8,15 +8,12 @@ use Adjaya\Router\HandlingRoute;
 
 class HandlingRouteAddon extends HandlingRoute
 {
-    use Traits\AddonTrait;
+    use Traits\HandlingAddonTrait;
 
     public function param(string $name, $value): self 
     {
         $this->dataMapper->setParam($name, $value);
-        /*
-        $this->dataMapper->setMap(['params', $name], $value);
-        var_dump($this->dataMapper->getMap(['params', $name]));
-        */
+
         return $this;
     }
 }

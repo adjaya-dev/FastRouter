@@ -6,7 +6,7 @@ namespace Adjaya\Router;
 
 interface HandlingGroupInterface
 {
-    public function prefix(string $prefix): self;
+    public function path(string $path): self;
 
     public function name(string $name): self;
 }

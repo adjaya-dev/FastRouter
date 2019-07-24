@@ -13,9 +13,9 @@ class HandlingGroup implements HandlingGroupInterface
         $this->dataMapper = $group;
     }
 
-    public function prefix(string $prefix): HandlingGroupInterface
+    public function path(string $path): HandlingGroupInterface
     {
-        $this->dataMapper->setPrefix($prefix);
+        $this->dataMapper->setPath($path);
 
         return $this;
     }

@@ -8,5 +8,5 @@ use Adjaya\Router\HandlingGroup;
 
 class HandlingGroupAddon extends HandlingGroup
 {
-    use Traits\AddonTrait;
+    use Traits\HandlingAddonTrait;
 }

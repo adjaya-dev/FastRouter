@@ -10,11 +10,11 @@ interface RouteInterface
     
     public function setName(string $name);
 
-    public function getName(): string;
+    public function getName(string $prefixName = ''): string;
 
     public function setPath(string $path);
 
-    public function getPath(): string;
+    public function getPath($prefix = ''): string;
 
     public function setHttpMethods($httpMethods);
 

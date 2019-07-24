@@ -12,13 +12,13 @@ interface GroupInterface
 
     public function addGroup(Group $group);
 
-    public function setPrefix(string $prefix);
+    public function setPath(string $path);
 
-    public function getPrefix(): string;
+    public function getPath($prefix = ''): string;
 
     public function setName(string $name);
 
-    public function getName(): string;
+    public function getName(string $prefixName = ''): string;
 
     public function getCollection(): array;
 

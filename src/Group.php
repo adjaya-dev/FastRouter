@@ -8,14 +8,14 @@ class Group extends DataMapper implements GroupInterface
 {
     protected static $idCount = 0;
     protected $id;
-    protected $prefix;
+    protected $path;
     protected $name;
     protected $collection = [];
 
-    public function __construct(?string $prefix = '', ?string $name = '')
+    public function __construct(?string $path = '', ?string $name = '')
     {
         $this->id = 'group_' . self::$idCount++;
-        $this->prefix = $prefix;
+        $this->path = $path;
         $this->name = $name;
     }
 
@@ -34,14 +34,18 @@ class Group extends DataMapper implements GroupInterface
         $this->collection[] = $group;
     }
 
-    public function setPrefix(string $prefix)
+    public function setPath(string $path)
     {
-        $this->prefix = $prefix;
+        $this->path = $path;
     }
 
-    public function getPrefix(): string 
+    public function getPath($prefix = ''): string 
     {
-        return $this->prefix;
+        if ($path = $this->path) {
+            $path = $prefix ? $prefix . $path : $path;
+        }
+        
+        return $path;
     }
 
     public function setName(string $name)
@@ -49,9 +53,13 @@ class Group extends DataMapper implements GroupInterface
         $this->name = $name;
     }
 
-    public function getName(): string 
+    public function getName(string $prefixName = ''): string 
     {
-        return $this->name;
+        if ($name = $this->name) {
+            $name = $prefixName ? $prefixName . '.' . $name : $name;
+        }
+
+        return $name;
     }
 
     public function getCollection(): array

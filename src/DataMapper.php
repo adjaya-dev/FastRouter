@@ -6,13 +6,11 @@ namespace Adjaya\Router;
 
 class DataMapper
 {
-    protected $lists = [];
-    
-    protected $maps = [];
+    protected $addons = [];
 
     public function setMap($adds, $value): void
     {
-        $current = &$this->maps;
+        $current = &$this->addons;
 
         foreach ((array) $adds as $add) {
             $current =  &$current[$add];
@@ -21,25 +19,9 @@ class DataMapper
         $current = $value;
     }
 
-    public function getMap($adds): array
-    {
-        $current = &$this->maps;
-
-        foreach ((array) $adds as $add) {
-            if (isset($current[$add])) {
-                $current =  &$current[$add];
-            } else {
-                return null;
-                break; 
-            }
-        }
-
-        return $current;
-    }
-
     public function setList($adds, $values): void
     {
-        $current = &$this->lists;
+        $current = &$this->addons;
 
         foreach ((array) $adds as $add) {
             $current =  &$current[(string) $add];
@@ -50,9 +32,10 @@ class DataMapper
         }
     }
 
-    public function getList($adds): array
+    public function get($adds): array
     {
-        $current = &$this->lists;
+        $current = &$this->addons;
+
         foreach ((array) $adds as $add) {
             if (isset($current[$add])) {
                 $current =  &$current[$add];
@@ -65,18 +48,12 @@ class DataMapper
         return $current;
     }
 
-    public function getLists(): array
+    public function getData(?array $parent_data = null): array
     {
-        return $this->lists;
-    }
-
-    public function getMaps(): array
-    {
-        return $this->maps;
-    }
-
-    public function getData(): array
-    {
-        return array_merge_recursive($this->getLists(), $this->getMaps());
+        if ($parent_data) {
+            return array_merge_recursive($parent_data, $this->addons);
+        }
+        
+        return $this->addons;
     }
 }
