@@ -29,13 +29,8 @@ class RouteCollector implements RouteCollectorInterface
 
     protected $currentGroupPrefix = '';
 
-    /**
-     * @var string
-     */
-    protected $currentGroupName = '';
-
-    //protected $currentGroupDataAddons = ['lists' => [], 'maps' => []];
-    protected $currentGroupDataAddons = [];
+    //protected $currentGroupData = ['lists' => [], 'maps' => []];
+    protected $currentGroupData = [];
 
     protected $Route = Route::class;
     protected $Group = Group::class;
@@ -146,49 +141,42 @@ class RouteCollector implements RouteCollectorInterface
         {
             if ($obj instanceof RouteInterface) 
             {
-                $routeInfo = [];
+                $data = $obj->getData($this->currentGroupData);
+                $this->routesData['info'][$data['id']] = $data;
 
-                $currentRoute = $obj->getPath($this->currentGroupPrefix);
-
-                $route_data = $this->routeParser->parse($currentRoute);
+                $route_data = $this->routeParser->parse($data['path']);
 
                 $this->dataGenerator
-                    ->addRoute($obj->getHttpMethods(), $route_data, $obj->getId(), $this->currentGroupId);
+                    ->addRoute(
+                        $data['methods'],
+                        $route_data,
+                        $data['id'],
+                        $this->currentGroupId
+                    );
 
-                if ($route_name = $obj->getName($this->currentGroupName)) 
+                if (isset($data['name']));
                 {
-                    $routeInfo += ['name' => $route_name];
+                    if (isset($this->routesData['named'][$data['id']])) {
+                        throw new Exception(
+                            "The route name {$data['name']} is already used and must be unique!"
+                        );
+                    }
 
-                    // Todo check if route_name is already set
-                    $this->routesData['named'][$obj->getId()] = $route_name;
+                    $this->routesData['named'][$data['id']] = $data['name'];
 
                     /* PARSE REVERSE */
                     if (method_exists($this->routeParser, 'parseReverse')) 
                     {
-                        if (isset($this->routesData['reverse']) &&
-                            array_key_exists($route_name, $this->routesData['reverse'])
-                        ) {
-                            throw new Exception(
-                                "The route name '$route_name' is already used and must be unique!"
-                            );
-                        }
-            
-                        $this->routesData['reverse'][$route_name] = $this->routeParser->parseReverse($route_data);
+                        $this->routesData['reverse'][$data['name']] = $this->routeParser->parseReverse($route_data);
                     }        
                 }
-
-                $routeInfo['handler'] = $obj->getHandler();
-                
-                if ($add = $obj->getData($this->currentGroupDataAddons))
-                {
-                    $routeInfo['add'] = $add;
-                }
-
-                $this->routesData['info'][$obj->getId()] = $routeInfo;
 
             } 
             elseif ($obj instanceof GroupInterface) 
             {
+                $previousGroupData = $this->currentGroupData;
+                $this->currentGroupData = $obj->getData($previousGroupData);
+
                 if ($prefix = $obj->getPath())
                 {
                     $previousGroupId = $this->currentGroupId;
@@ -198,25 +186,13 @@ class RouteCollector implements RouteCollectorInterface
                     $this->dataGenerator->addGroup($group_data, $this->currentGroupId, $previousGroupId);
                 }
 
-                $previousGroupDataAddons = $this->currentGroupDataAddons;
-
-                $this->currentGroupDataAddons = $obj->getData($previousGroupDataAddons);
-
-                $previousGroupName = $this->currentGroupName;
-                $this->currentGroupName = $obj->getName($previousGroupName);
-
-                $previousGroupPrefix = $this->currentGroupPrefix;
-                $this->currentGroupPrefix = $obj->getPath($previousGroupPrefix);
-
                 $this->processGroup($obj);
 
                 if ($prefix) {
                     $this->currentGroupId = $previousGroupId;
                 }
 
-                $this->currentGroupPrefix = $previousGroupPrefix;
-                $this->currentGroupName = $previousGroupName;
-                $this->currentGroupDataAddons = $previousGroupDataAddons;
+                $this->currentGroupData = $previousGroupData;
 
             } else {
                 throw new Exception("Error Processing Request", 7);

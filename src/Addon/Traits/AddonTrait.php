@@ -12,6 +12,8 @@ trait AddonTrait
 
     protected $after = [];
 
+    protected $params = [];
+
     public function setMiddlewares($middlewares)
     {
         foreach ((array) $middlewares as $middleware) {
@@ -60,6 +62,20 @@ trait AddonTrait
         return $this->after;
     }
 
+    public function setParam($name, $value)
+    {
+        $this->params[$name] = $value;
+    }
+
+    public function getParams($parent = null)
+    {
+        if ($parent) {
+            return $this->params + $parent;
+        }
+
+        return $this->params;
+    }
+
     public function getData(?array $parent = null): array
     {
         $data = null;
@@ -76,6 +92,10 @@ trait AddonTrait
 
         if ($after = isset($parent['after']) ? $this->getAfter($parent['after']) : $this->getAfter()) {
             $data['after'] = $after;
+        }
+
+        if ($params = isset($parent['params']) ? $this->getParams($parent['params']) : $this->getParams()) {
+            $data['params'] = $params;
         }
 
         return parent::getData($data);

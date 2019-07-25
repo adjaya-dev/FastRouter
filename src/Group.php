@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Adjaya\Router;
 
-class Group extends DataMapper implements GroupInterface
+class Group implements GroupInterface
 {
     protected static $idCount = 0;
     protected $id;
@@ -65,5 +65,22 @@ class Group extends DataMapper implements GroupInterface
     public function getCollection(): array
     {
         return $this->collection;
+    }
+
+    public function getData(?array $parent = null): array
+    {
+        $data = [];
+
+        if ($parent) { $data = $parent; }
+
+        if ($name = isset($parent['name']) ? $this->getName($parent['name']) : $this->getName()) {
+            $data['name'] = $name;
+        }
+
+        if ($path = isset($parent['path']) ? $this->getPath($parent['path']) : $this->getPath()) {
+            $data['path'] = $path;
+        }
+
+        return $data;
     }
 }

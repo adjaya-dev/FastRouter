@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Adjaya\Router;
 
-class Route extends DataMapper implements RouteInterface
+class Route implements RouteInterface
 {
     protected static $idCount = 0;
     protected $id;
@@ -73,5 +73,32 @@ class Route extends DataMapper implements RouteInterface
     public function getHandler()
     {
         return $this->handler;
+    }
+
+    public function getData(?array $parent = null): array
+    {
+        $data = [];
+
+        if ($parent) { $data = $parent; }
+
+        $data['id'] = $this->getId();
+
+        if ($name = isset($parent['name']) ? $this->getName($parent['name']) : $this->getName()) {
+            $data['name'] = $name;
+        }
+
+        if ($path = isset($parent['path']) ? $this->getPath($parent['path']) : $this->getPath()) {
+            $data['path'] = $path;
+        }
+
+        if ($controller = $this->getHandler()) {
+            $data['controller'] = $controller;
+        }
+
+        if ($methods = $this->getHttpMethods()) {
+            $data['methods'] = $methods;
+        }
+
+        return $data;
     }
 }
