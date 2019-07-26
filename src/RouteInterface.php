@@ -7,7 +7,7 @@ namespace Adjaya\Router;
 interface RouteInterface
 {
     public function getId(): string;
-    
+
     public function setName(string $name);
 
     public function getName(string $prefixName = ''): string;

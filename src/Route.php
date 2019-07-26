@@ -15,7 +15,7 @@ class Route implements RouteInterface
 
     public function __construct($httpMethods = '*', $path = '/', $handler = null, $name = '')
     {
-        $this->id = 'route_'. self::$idCount++;
+        $this->id = 'route_' . self::$idCount++;
         $this->httpMethods = (array) $httpMethods;
         $this->path = (string) $path;
         $this->handler = $handler;
@@ -37,7 +37,7 @@ class Route implements RouteInterface
         if ($name = $this->name) {
             $name = $prefixName ? $prefixName . '.' . $name : $name;
         }
-        
+
         return $name;
     }
 
@@ -51,7 +51,7 @@ class Route implements RouteInterface
         if ($path = $this->path) {
             $path = $prefix ? $prefix . $path : $path;
         }
-        
+
         return $path;
     }
 
@@ -79,7 +79,9 @@ class Route implements RouteInterface
     {
         $data = [];
 
-        if ($parent) { $data = $parent; }
+        if ($parent) {
+            $data = $parent;
+        }
 
         $data['id'] = $this->getId();
 

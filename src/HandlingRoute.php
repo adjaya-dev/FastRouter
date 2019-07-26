@@ -7,8 +7,8 @@ namespace Adjaya\Router;
 class HandlingRoute implements HandlingRouteInterface
 {
     protected $dataMapper;
-    
-    public function __construct(Route $route)
+
+    public function __construct(RouteInterface $route)
     {
         $this->dataMapper = $route;
     }

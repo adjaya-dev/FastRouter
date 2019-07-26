@@ -8,9 +8,9 @@ interface GroupInterface
 {
     public function getId(): string;
 
-    public function addRoute(Route $route);
+    public function addRoute(RouteInterface $route);
 
-    public function addGroup(Group $group);
+    public function addGroup(self $group);
 
     public function setPath(string $path);
 
@@ -22,5 +22,5 @@ interface GroupInterface
 
     public function getCollection(): array;
 
-    public function getData(): array;
+    public function getData(?array $parent = null): array;
 }

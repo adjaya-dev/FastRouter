@@ -196,17 +196,17 @@ abstract class RegexBasedAbstract implements DataGeneratorInterface
 
                 if (isset($variables[$varName])) {
                     throw new BadRouteException(sprintf(
-                            'Cannot use the same placeholder "%s" twice',
-                            $varName
-                        ));
+                        'Cannot use the same placeholder "%s" twice',
+                        $varName
+                    ));
                 }
 
                 if ($this->regexHasCapturingGroups($regexPart)) {
                     throw new BadRouteException(sprintf(
-                            'Regex "%s" for parameter "%s" contains a capturing group',
-                            $regexPart,
-                            $varName
-                        ));
+                        'Regex "%s" for parameter "%s" contains a capturing group',
+                        $regexPart,
+                        $varName
+                    ));
                 }
 
                 $variables[$varName] = $varName;

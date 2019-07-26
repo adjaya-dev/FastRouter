@@ -8,7 +8,7 @@ class HandlingGroup implements HandlingGroupInterface
 {
     protected $dataMapper;
 
-    public function __construct(Group $group)
+    public function __construct(GroupInterface $group)
     {
         $this->dataMapper = $group;
     }

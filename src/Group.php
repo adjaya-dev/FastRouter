@@ -24,12 +24,12 @@ class Group implements GroupInterface
         return $this->id;
     }
 
-    public function addRoute(Route $route)
+    public function addRoute(RouteInterface $route)
     {
         $this->collection[] = $route;
     }
 
-    public function addGroup(Group $group)
+    public function addGroup(GroupInterface $group)
     {
         $this->collection[] = $group;
     }
@@ -39,12 +39,12 @@ class Group implements GroupInterface
         $this->path = $path;
     }
 
-    public function getPath($prefix = ''): string 
+    public function getPath($prefix = ''): string
     {
         if ($path = $this->path) {
             $path = $prefix ? $prefix . $path : $path;
         }
-        
+
         return $path;
     }
 
@@ -53,7 +53,7 @@ class Group implements GroupInterface
         $this->name = $name;
     }
 
-    public function getName(string $prefixName = ''): string 
+    public function getName(string $prefixName = ''): string
     {
         if ($name = $this->name) {
             $name = $prefixName ? $prefixName . '.' . $name : $name;
@@ -71,7 +71,9 @@ class Group implements GroupInterface
     {
         $data = [];
 
-        if ($parent) { $data = $parent; }
+        if ($parent) {
+            $data = $parent;
+        }
 
         if ($name = isset($parent['name']) ? $this->getName($parent['name']) : $this->getName()) {
             $data['name'] = $name;

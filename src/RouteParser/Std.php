@@ -24,7 +24,7 @@ REGEX;
     public function parse($route)
     {
         $routeWithoutClosingOptionals = rtrim($route, ']');
-        $numOptionals = \mb_strlen($route) - \mb_strlen($routeWithoutClosingOptionals);
+        $numOptionals = mb_strlen($route) - mb_strlen($routeWithoutClosingOptionals);
 
         // Split on [ while skipping placeholders
         $segments = preg_split('~' . self::VARIABLE_REGEX . '(*SKIP)(*F) | \[~x', $routeWithoutClosingOptionals);
@@ -78,10 +78,10 @@ REGEX;
                 $set[1][0],
                 isset($set[2]) ? trim($set[2][0]) : self::DEFAULT_DISPATCH_REGEX
             ];
-            $offset = $set[0][1] + \mb_strlen($set[0][0]);
+            $offset = $set[0][1] + mb_strlen($set[0][0]);
         }
 
-        if ($offset !== \mb_strlen($route)) {
+        if ($offset !== mb_strlen($route)) {
             $routeData[] = mb_substr($route, $offset);
         }
 

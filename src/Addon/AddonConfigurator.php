@@ -7,13 +7,13 @@ namespace Adjaya\Router\Addon;
 use Adjaya\Router\Configurator;
 use Adjaya\Router\RouteCollector;
 
-class AddonConfigurator extends Configurator implements AddonConfiguratorInterface 
+class AddonConfigurator extends Configurator implements AddonConfiguratorInterface
 {
     protected $class = RouteCollector::class;
-    
+
     protected $options = [
-        'group' => GroupAddon::class,
-        'route' => RouteAddon::class,
+        'group'         => GroupAddon::class,
+        'route'         => RouteAddon::class,
         'handlingRoute' => HandlingRouteAddon::class,
         'handlingGroup' => HandlingGroupAddon::class,
     ];

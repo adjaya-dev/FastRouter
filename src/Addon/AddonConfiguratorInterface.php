@@ -6,5 +6,4 @@ namespace Adjaya\Router\Addon;
 
 interface AddonConfiguratorInterface
 {
-
 }

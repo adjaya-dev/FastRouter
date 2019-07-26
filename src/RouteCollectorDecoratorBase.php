@@ -14,7 +14,8 @@ class RouteCollectorDecoratorBase implements RouteCollectorInterface, RouteColle
     protected $options;
 
     public function __construct(
-        RouteCollectorInterface $RouteCollector, ?array $options = null
+        RouteCollectorInterface $RouteCollector,
+        ?array $options = null
     ) {
         $this->RouteCollector = $RouteCollector;
 
@@ -43,19 +44,21 @@ class RouteCollectorDecoratorBase implements RouteCollectorInterface, RouteColle
      *
      * @param callable $callback
      */
-    public function addCollection (
-        callable $callback, CollectorInterface $collector
+    public function addCollection(
+        callable $callback,
+        CollectorInterface $collector
     ): HandlingGroupInterface {
         return $this->addGroup('', $callback, $collector);
     }
 
     public function addGroup(
-        $prefix, callable $callback, CollectorInterface $collector
-    ): HandlingGroupInterface 
-    {
+        $prefix,
+        callable $callback,
+        CollectorInterface $collector
+    ): HandlingGroupInterface {
         return $this->RouteCollector->addGroup($prefix, $callback, $collector);
     }
-    
+
     public function addRoute($httpMethods, $path, $handler): HandlingRouteInterface
     {
         return $this->RouteCollector->addRoute($httpMethods, $path, $handler);

@@ -155,22 +155,20 @@ class Router
 
     protected function getRouteCollector(): RouteCollectorInterface
     {
-        if (is_array($this->options['routeCollector'])) {
+        if (\is_array($this->options['routeCollector'])) {
             list($routeCollector, $options) = $this->options['routeCollector'];
         } else {
             $routeCollector = $this->options['routeCollector'];
             $options = [];
         }
 
-        if (is_a($routeCollector, ConfiguratorInterface::class, true))
-        {
+        if (is_a($routeCollector, ConfiguratorInterface::class, true)) {
             $routeCollector = new $routeCollector($options);
             $options = $routeCollector->getOptions();
             $routeCollector = $routeCollector->getClass();
         }
 
-        if (is_a($routeCollector, RouteCollectorInterface::class, true))
-        {
+        if (is_a($routeCollector, RouteCollectorInterface::class, true)) {
             if (isset($options['routeParser'])) {
                 $this->options['routeParser'] = $options['routeParser'];
                 unset($options['routeParser']);
@@ -185,9 +183,9 @@ class Router
             }
 
             return $this->routeCollectorFactory($routeCollector, $options);
-        } 
-        
-        throw new Exception("Error Processing Request", 1);
+        }
+
+        throw new Exception('Error Processing Request', 1);
     }
 
     protected function routeCollectorFactory($routeCollector, $options): RouteCollectorInterface

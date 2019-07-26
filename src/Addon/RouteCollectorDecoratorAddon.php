@@ -10,10 +10,10 @@ use Adjaya\Router\RouteCollectorInterface;
 class RouteCollectorDecoratorAddon extends RouteCollectorDecoratorBase implements RouteCollectorDecoratorAddonInterface
 {
     protected $RouteCollector;
-    
+
     protected $options = [
-        'route' => RouteAddon::class,
-        'group' => GroupAddon::class,
+        'route'         => RouteAddon::class,
+        'group'         => GroupAddon::class,
         'handlingRoute' => HandlingRouteAddon::class,
         'handlingGroup' => HandlingGroupAddon::class,
     ];
@@ -42,7 +42,7 @@ class RouteCollectorDecoratorAddon extends RouteCollectorDecoratorBase implement
     protected function setOptions(array $options): void
     {
         if (isset($options['route'])) {
-            $this->options['route'] =  $options['route'];
+            $this->options['route'] = $options['route'];
         }
 
         if (isset($options['group'])) {
@@ -50,7 +50,7 @@ class RouteCollectorDecoratorAddon extends RouteCollectorDecoratorBase implement
         }
 
         if (isset($options['handlingRoute'])) {
-            $this->options['handlingRoute'] =  $options['handlingRoute'];
+            $this->options['handlingRoute'] = $options['handlingRoute'];
         }
 
         if (isset($options['handlingGroup'])) {
