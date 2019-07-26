@@ -36,7 +36,6 @@ class Router
         'dataGenerator'                   => DataGenerator\MarkBased::class,
         'dispatcher'                      => Dispatcher\MarkBased::class,
         'cacheDisabled'                   => false,
-        'routeCollectorDecoratorsFactory' => RouteCollectorDecoratorsFactory::class,
     ];
 
     /**
@@ -79,10 +78,6 @@ class Router
     public function simpleRoutes(): array
     {
         $routeCollector = $this->getRouteCollector();
-
-        if (isset($this->options['routeCollectorDecorators']) && $this->options['routeCollectorDecorators']) {
-            $routeCollector = $this->getDecoratedRouteCollector($routeCollector);
-        }
 
         $routeDefinitionCallback = $this->routeDefinitionCallback;
 
@@ -211,30 +206,6 @@ class Router
         }
 
         return $DataGenerator;
-    }
-
-    protected function getDecoratedRouteCollector(
-        RouteCollectorInterface $routeCollector
-    ): RouteCollectorDecoratorInterface {
-        return $this->getRouteCollectorDecoratorsFactory()->decorate($routeCollector);
-    }
-
-    protected function getRouteCollectorDecoratorsFactory(): RouteCollectorDecoratorsFactoryInterface
-    {
-        return
-            new $this->options['routeCollectorDecoratorsFactory'](
-                $this->getRouteCollectorDecoratorConfigurators()
-            );
-    }
-
-    protected function getRouteCollectorDecoratorConfigurators(): array
-    {
-        $configurators = [];
-        foreach ($this->options['routeCollectorDecorators'] as $configuratorClass => $options) {
-            $configurators[] = $this->getConfigurator($configuratorClass, $options);
-        }
-
-        return $configurators;
     }
 
     protected function getConfigurator(string $configuratorClass, array $options): ConfiguratorInterface

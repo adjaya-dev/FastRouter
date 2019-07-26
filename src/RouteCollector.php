@@ -1,10 +1,5 @@
 <?php
 
-// add function to class:
-//https://gist.github.com/Mihailoff/3700483
-// https://stackoverflow.com/questions/6384431/creating-anonymous-objects-in-php
-// https://stackoverflow.com/questions/2938004/how-to-add-a-new-method-to-a-php-object-on-the-fly
-// https://www.php.net/manual/fr/reserved.classes.php
 declare(strict_types=1);
 
 namespace Adjaya\Router;
@@ -27,8 +22,6 @@ class RouteCollector implements RouteCollectorInterface
      * @var array
      */
     protected $routesData = [];
-
-    protected $currentGroupPrefix = '';
 
     protected $currentGroupData = [];
 
@@ -87,11 +80,6 @@ class RouteCollector implements RouteCollectorInterface
         if (is_a($handlingRouteClass, HandlingRouteInterface::class, true)) {
             $this->HandlingRoute = $handlingRouteClass;
         }
-    }
-
-    public function getHandlingRoute()
-    {
-        return $this->Route;
     }
 
     public function setHandlingGroup(string $handlingGroupClass)
