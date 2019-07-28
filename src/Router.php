@@ -31,6 +31,7 @@ class Router
      * @var array
      */
     protected $options = [
+        'collector'                       => Collector::class,
         'routeCollector'                  => RouteCollector::class,
         'routeParser'                     => RouteParser\Std::class,
         'dataGenerator'                   => DataGenerator\MarkBased::class,
@@ -78,10 +79,9 @@ class Router
     public function simpleRoutes(): array
     {
         $routeCollector = $this->getRouteCollector();
+        $collector = $this->getCollector($routeCollector);
 
         $routeDefinitionCallback = $this->routeDefinitionCallback;
-
-        $collector = new Collector($routeCollector);
         $routeDefinitionCallback($collector);
 
         return $routeCollector->getData();
@@ -106,6 +106,11 @@ class Router
 
         $dispatchData = $this->simpleRoutes();
 
+        if (!is_dir(dirname($options['cacheFile'])))
+		{
+			mkdir(dirname($options['cacheFile']), 0755, true);
+        }
+        
         file_put_contents(
             $options['cacheFile'],
             '<?php return ' . var_export($dispatchData, true) . ';'
@@ -190,6 +195,11 @@ class Router
             $this->getDataGenerator(),
             $options
         );
+    }
+
+    protected function getCollector(RouteCollectorInterface $routeCollector): CollectorInterface
+    {
+        return new $this->options['collector']($routeCollector);
     }
 
     protected function getRouteParser(): RouteParser\RouteParserInterface
