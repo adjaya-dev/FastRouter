@@ -6,21 +6,21 @@ namespace Adjaya\Router\Addon\Traits;
 
 trait HandlingAddonTrait
 {
-    public function middleWare(...$middlewares)
+    public function middleWare(...$middlewares): self
     {
         $this->dataMapper->setMiddlewares($middlewares);
 
         return $this;
     }
 
-    public function before(...$before)
+    public function before(...$before): self
     {
         $this->dataMapper->setBefore($before);
 
         return $this;
     }
 
-    public function after(...$after)
+    public function after(...$after): self
     {
         $this->dataMapper->setAfter($after);
 

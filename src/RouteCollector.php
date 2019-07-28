@@ -10,11 +10,18 @@ use Exception;
 
 class RouteCollector implements RouteCollectorInterface
 {
-    protected $currentGroupId;
-    protected $groupIdPrefix = 'group_';
-    protected $groupIdCount = 0;
+    protected $Route = Route::class;
+    protected $Group = Group::class;
+    protected $HandlingGroup = HandlingGroup::class;
+    protected $HandlingRoute = HandlingRoute::class;
+
     protected $currentGroup;
     protected $currentHandlingGroup;
+
+    protected $groupIdPrefix = 'group_';
+    protected $groupIdCount = 0;
+    protected $currentGroupId;
+    protected $currentGroupData = [];
 
     /**
      * Routes Data.
@@ -23,18 +30,12 @@ class RouteCollector implements RouteCollectorInterface
      */
     protected $routesData = [];
 
-    protected $currentGroupData = [];
-
-    protected $Route = Route::class;
-    protected $Group = Group::class;
-    protected $HandlingGroup = HandlingGroup::class;
-    protected $HandlingRoute = HandlingRoute::class;
-
     /**
      * Constructs a route collector.
      *
      * @param RouteParserInterface   $routeParser
      * @param DataGeneratorInterface $dataGenerator
+     * @param   array|null           $options
      */
     public function __construct(RouteParserInterface $routeParser, DataGeneratorInterface $dataGenerator, ?array $options = [])
     {
@@ -101,7 +102,7 @@ class RouteCollector implements RouteCollectorInterface
      */
     public function getData(): array
     {
-        $this->groupDataGenerator($this->currentGroup);
+        $this->processGroup($this->currentGroup);
 
         $routes_data = $this->dataGenerator->getData();
 
@@ -110,12 +111,7 @@ class RouteCollector implements RouteCollectorInterface
         return $routes_data;
     }
 
-    protected function groupDataGenerator($group)
-    {
-        $this->processGroup($group);
-    }
-
-    protected function processGroup($group)
+    protected function processGroup(GroupInterface $group)
     {
         $collection = $group->getCollection();
 
@@ -135,19 +131,18 @@ class RouteCollector implements RouteCollectorInterface
                     );
 
                 if (isset($data['name'])) {
-                }
-
-                if (isset($this->routesData['named'][$data['id']])) {
-                    throw new Exception(
-                        "The route name {$data['name']} is already used and must be unique!"
-                    );
-                }
-
-                $this->routesData['named'][$data['id']] = $data['name'];
-
-                /* PARSE REVERSE */
-                if (method_exists($this->routeParser, 'parseReverse')) {
-                    $this->routesData['reverse'][$data['name']] = $this->routeParser->parseReverse($route_data);
+                    if (isset($this->routesData['named'][$data['id']])) {
+                        throw new Exception(
+                            "The route name {$data['name']} is already used and must be unique!"
+                        );
+                    }
+    
+                    $this->routesData['named'][$data['id']] = $data['name'];
+    
+                    /* PARSE REVERSE */
+                    if (method_exists($this->routeParser, 'parseReverse')) {
+                        $this->routesData['reverse'][$data['name']] = $this->routeParser->parseReverse($route_data);
+                    }
                 }
             } elseif ($obj instanceof GroupInterface) {
                 $previousGroupData = $this->currentGroupData;
