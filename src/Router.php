@@ -107,10 +107,10 @@ class Router
         $dispatchData = $this->simpleRoutes();
 
         if (!is_dir(dirname($options['cacheFile'])))
-		{
-			mkdir(dirname($options['cacheFile']), 0755, true);
+        {
+            mkdir(dirname($options['cacheFile']), 0755, true);
         }
-        
+
         file_put_contents(
             $options['cacheFile'],
             '<?php return ' . var_export($dispatchData, true) . ';'

@@ -28,7 +28,7 @@ class RouteCollector implements RouteCollectorInterface
      *
      * @var array
      */
-    protected $routesData = [];
+    protected $routesData = ['named' =>[]];
 
     /**
      * Constructs a route collector.
@@ -129,9 +129,10 @@ class RouteCollector implements RouteCollectorInterface
                         $data['id'],
                         $this->currentGroupId
                     );
-
                 if (isset($data['name'])) {
-                    if (isset($this->routesData['named'][$data['id']])) {
+
+                    if (in_array($data['name'], $this->routesData['named'])) {
+                    //if (isset($this->routesData['named'][$data['id']])) {
                         throw new Exception(
                             "The route name {$data['name']} is already used and must be unique!"
                         );
@@ -182,10 +183,7 @@ class RouteCollector implements RouteCollectorInterface
      * @param string|array $prefix
      */
     public function addGroup(
-        $path,
-        callable $callback,
-        CollectorInterface $collector
-    ): HandlingGroupInterface {
+        $path, callable $callback, CollectorInterface $collector): HandlingGroupInterface {
         $group_name = '';
         if (\is_array($path)) {
             $group_name = key($path);

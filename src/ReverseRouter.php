@@ -29,10 +29,6 @@ class ReverseRouter
     }
 
     /**
-     * @param string $id
-     * @param array  $vars
-     * @param bool   $literal
-     *
      * @return string The formated route uri
      */
     public function route(string $name, ...$params): string
@@ -46,6 +42,7 @@ class ReverseRouter
 
             return $route($this->reverseRoutesData[$name]);
         }
+        
         throw new Exception("The route name '$name' does not exists");
     }
 }
